@@ -1,0 +1,54 @@
+{
+  "project_info": {
+    "project_number": "711392813500",
+    "project_id": "cryptcore-mining-2025",
+    "storage_bucket": "cryptcore-mining-2025.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:711392813500:android:9530fc246b88faddfccbb9",
+        "android_client_info": {
+          "package_name": "com.mining.cryptcore"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "711392813500-tjftoa3n8j2prq9cn4ql8h6nbui0b4ja.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.mining.cryptcore",
+            "certificate_hash": "79714f61818cce782616afed3fd37d3c4e166a9e"
+          }
+        },
+        {
+          "client_id": "711392813500-sdc74930vugp2ufivci5k1hjjfod9ebg.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBy0Cg46xcsDQqrDmSj6mtqY0lEyayDvcE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "711392813500-sdc74930vugp2ufivci5k1hjjfod9ebg.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "711392813500-753p39dvl59tt3komdahfemacoj2bnm7.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.mining.cryptcore"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
