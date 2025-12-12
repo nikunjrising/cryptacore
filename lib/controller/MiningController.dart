@@ -225,10 +225,13 @@ class MiningController extends GetxController {
     final doc = await db.collection("users").doc(userId).get();
     if (!doc.exists) {
       earnedBySpinWheel.value = 0.0;
+      print('earnedBySpinWheel1 $earnedBySpinWheel');
+
       return;
     }
 
     earnedBySpinWheel.value = (doc.data()?["earnedBySpinWheel"] ?? 0.0).toDouble();
+    print('earnedBySpinWheel $earnedBySpinWheel');
   }
 
 

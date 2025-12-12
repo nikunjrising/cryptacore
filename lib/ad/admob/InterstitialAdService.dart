@@ -5,24 +5,33 @@ import 'package:google_mobile_ads/google_mobile_ads.dart';
 
 import '../../controller/ConfigController.dart';
 
-
-class InterstitialAdService {
+// 1. Extend GetxService (or GetxController)
+class InterstitialAdService extends GetxService {
   InterstitialAd? _interstitialAd;
   bool isAdReady = false;
   final configController = Get.find<ConfigController>();
 
+  // 2. Add onInit to Auto-Load the ad when this service is started
+  @override
+  void onInit() {
+    super.onInit();
+    loadAd();
+  }
 
   /// ----------------------------------------------------------
   /// Load Interstitial Ad
   /// ----------------------------------------------------------
   void loadAd() {
     print('Loading interstitial ad...');
+
+    // Safety check to prevent crashing if config isn't ready
+    if (!Get.isRegistered<ConfigController>()) return;
+
     final adUnitId = Platform.isAndroid
         ? configController.config.value.intAndroidId
         : configController.config.value.intIosId;
 
     InterstitialAd.load(
-      // adUnitId: 'ca-app-pub-3940256099942544/1033173712',
       adUnitId: adUnitId,
       request: const AdRequest(),
       adLoadCallback: InterstitialAdLoadCallback(
@@ -36,6 +45,9 @@ class InterstitialAdService {
           print('❌ Failed to load interstitial ad: ${error.message}');
           _interstitialAd = null;
           isAdReady = false;
+
+          // Optional: Retry loading after a delay if it fails
+          Future.delayed(const Duration(seconds: 10), () => loadAd());
         },
       ),
     );
@@ -49,11 +61,13 @@ class InterstitialAdService {
       onAdDismissedFullScreenContent: (ad) {
         print('Interstitial ad dismissed.');
         try { ad.dispose(); } catch (_) {}
-        loadAd(); // Load next ad
+        isAdReady = false; // Mark as not ready immediately
+        loadAd(); // Load next ad immediately for the next click
       },
       onAdFailedToShowFullScreenContent: (ad, error) {
         print('Interstitial failed to show: $error');
         try { ad.dispose(); } catch (_) {}
+        isAdReady = false;
         loadAd(); // Reload
       },
     );
@@ -69,16 +83,40 @@ class InterstitialAdService {
     if (isAdReady && _interstitialAd != null) {
       _interstitialAd!.show();
 
-      // After showing, reset
-      isAdReady = false;
-      _interstitialAd = null;
+      // We don't nullify _interstitialAd here immediately,
+      // we wait for the dismissal callback to clean it up.
 
-      // When ad is closed (handled above), call callback
-      Future.delayed(const Duration(milliseconds: 100), () {
-        onClose();
+      // When ad is closed (handled above in callbacks), we just fire the user callback
+      // NOTE: With AdMob, the onClose logic is usually better handled in the fullScreenContentCallback
+      // But to keep your structure working:
+
+      Future.delayed(const Duration(milliseconds: 500), () {
+        // This is a bit risky because the ad might still be open.
+        // Ideally, pass 'onClose' to _setCallbacks.
+        // But for your logic, we execute the action when the ad *closes*,
+        // which the admob callback handles.
       });
+
+      // Update: Let's attach the specific onClose action to the current ad callback
+      _interstitialAd!.fullScreenContentCallback = FullScreenContentCallback(
+          onAdDismissedFullScreenContent: (ad) {
+            ad.dispose();
+            isAdReady = false;
+            onClose(); // <--- Call your action here
+            loadAd(); // Load next
+          },
+          onAdFailedToShowFullScreenContent: (ad, err) {
+            ad.dispose();
+            isAdReady = false;
+            onUnavailable(); // <--- Call fallback here
+            loadAd();
+          }
+      );
+
     } else {
       print("⚠ Interstitial Ad NOT ready");
+      // Try loading one for next time
+      loadAd();
       onUnavailable();
     }
   }

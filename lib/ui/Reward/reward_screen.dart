@@ -4,8 +4,8 @@ import 'package:cryptacore/ui/Reward/OnRewardView.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
-import '../../ad/admob/InterstitialAdService.dart';
 import '../../const/color.dart';
+import '../../utils/utils.dart';
 import '../widget/DiagonalBorderPainter.dart';
 import 'RewardController.dart';
 
@@ -19,7 +19,6 @@ class RewardScreen extends StatefulWidget {
 
 class _RewardScreenState extends State<RewardScreen> {
   final rewardController = Get.find<RewardController>();
-  final InterstitialAdService interstitialAdService = InterstitialAdService();
 
   final List<String> cardBg = [
     AppImages.rewardBg1,
@@ -32,7 +31,6 @@ class _RewardScreenState extends State<RewardScreen> {
   @override
   void initState() {
     super.initState();
-    interstitialAdService.loadAd();
   }
 
 
@@ -98,15 +96,24 @@ class _RewardScreenState extends State<RewardScreen> {
                   : rewardIndex == 2 ? "wheel"
                   : "mystery";
 
-              interstitialAdService.show(
-                onClose: () {
-                  Get.to(() => OnRewardView(
-                    selectedCard: bgImage,
-                    rewardType: rewardType,
-                    cardIndex: index,
-                  ));
-                },
-                onUnavailable: () {
+              // interstitialAdService.show(
+              //   onClose: () {
+              //     Get.to(() => OnRewardView(
+              //       selectedCard: bgImage,
+              //       rewardType: rewardType,
+              //       cardIndex: index,
+              //     ));
+              //   },
+              //   onUnavailable: () {
+              //     Get.to(() => OnRewardView(
+              //       selectedCard: bgImage,
+              //       rewardType: rewardType,
+              //       cardIndex: index,
+              //     ));
+              //   },
+              // );
+              ShowIntAd().onGoAction(
+                onGoAction: () {
                   Get.to(() => OnRewardView(
                     selectedCard: bgImage,
                     rewardType: rewardType,

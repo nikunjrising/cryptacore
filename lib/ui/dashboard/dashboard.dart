@@ -6,11 +6,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:lottie/lottie.dart';
-
-import '../../ad/IronSource/reward_ad/IsRewardAdController.dart';
 import '../../controller/MiningController.dart';
 import '../../main.dart';
 import '../../utils/AppPermissionService.dart';
+import '../../utils/utils.dart';
 import '../Reward/reward_screen.dart';
 import '../mining/mining_screen.dart';
 import '../profile/profile_screen.dart';
@@ -26,7 +25,6 @@ class Dashboard extends StatefulWidget {
 
 class _DashboardState extends State<Dashboard> with WidgetsBindingObserver{
   final MiningController miningController = Get.find();
-  final IsRewardAdController isRewardAdController = Get.find();
 
   bool _isInitialized = false;
 
@@ -139,25 +137,45 @@ class _DashboardState extends State<Dashboard> with WidgetsBindingObserver{
                 isBooster: false,
 
                 onTapButton: () async {
-                  isRewardAdController.onReward = (reward) async {
-                    int seconds = await miningController.getDynamicSessionSeconds();
-                    miningController.startMining(sessionSeconds: seconds);
-
-                    AppSnackBar.show(
-                      title: "Mining session Start",
-                      subtitle: "",
-                    );
-                  };
-                  isRewardAdController.showRewardAd();
+                  // isRewardAdController.onReward = (reward) async {
+                  //   int seconds = await miningController.getDynamicSessionSeconds();
+                  //   miningController.startMining(sessionSeconds: seconds);
+                  //
+                  //   AppSnackBar.show(
+                  //     title: "Mining session Start",
+                  //     subtitle: "",
+                  //   );
+                  // };
+                  // isRewardAdController.showRewardAd();
 
                   // final rewardController = Get.find<RewardAdController>();
                   //
                   // await rewardController.showRewardAd();
                   // int seconds = await miningController.getDynamicSessionSeconds();
                   // miningController.startMining(sessionSeconds: seconds);
+                  ShowRewardAd().show(
+                    onReward: () async {
+                      // 1. Calculate seconds
+                      int seconds = await miningController.getDynamicSessionSeconds();
 
+                      // 2. Start Mining
+                      miningController.startMining(sessionSeconds: seconds);
 
+                      // 3. Show Success
+                      AppSnackBar.show(
+                        title: "Mining session Start",
+                        subtitle: "",
+                      );
+                    },
+                    onFailed: () {
+                      AppSnackBar.show(
+                        title: "Ad Not Ready",
+                        subtitle: "Please try again in a moment",
+                      );
+                    },
+                  );
                 }
+
 
             ));
           },

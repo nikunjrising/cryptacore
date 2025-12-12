@@ -11,6 +11,9 @@ class PreferenceKeys {
   static const lastSpinTime = "last_spin_time";
   static const String lastSpinDate = "lastSpinDate";
   static const String todaySpinCount = "todaySpinCount";
+
+  static const String intAdRotationCount = "intAdRotationCount";
+  static const String rewardAdRotationCount = "rewardAdRotationCount";
 }
 
 class PreferenceHelper {

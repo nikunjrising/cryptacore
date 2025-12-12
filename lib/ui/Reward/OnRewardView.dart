@@ -9,10 +9,11 @@ import 'package:lottie/lottie.dart';
 import 'package:sizer/sizer.dart';
 
 import '../../ad/admob/NativeAdExample.dart';
-import '../../ad/admob/RewardAdController.dart';
 import '../../const/RewardService.dart';
 import '../../const/app_images.dart';
 import '../../controller/MiningController.dart';
+import '../../utils/utils.dart';
+import '../widget/AppSnackBar.dart';
 import 'RewardController.dart';
 
 class OnRewardView extends StatefulWidget {
@@ -71,15 +72,28 @@ class _OnRewardViewState extends State<OnRewardView> {
           onPressed: () async {
             Get.back();
 
-            final rewardController = Get.find<RewardAdController>();
+            // final rewardController = Get.find<RewardAdController>();
+            //
+            // bool? result = await rewardController.showRewardAd();
+            //
+            // if (result == true) {
+            //   setState(() => revealed = true);
+            // } else {
+            //   Fluttertoast.showToast(msg: "Better luck next time 😊");
+            // }
 
-            bool? result = await rewardController.showRewardAd();
-
-            if (result == true) {
-              setState(() => revealed = true);
-            } else {
-              Fluttertoast.showToast(msg: "Better luck next time 😊");
-            }
+            ShowRewardAd().show(
+                onReward: () async {
+                  setState(() => revealed = true);
+                },
+                onFailed: () {
+                  AppSnackBar.show(
+                      title: 'Ad Failed',
+                      subtitle: 'Try after some time',
+                      backgroundColor: Colors.red.withValues(alpha: 0.5)
+                  );
+                }
+            );
           },
           child: const Text("Watch Ad"),
         ),

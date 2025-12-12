@@ -11,6 +11,7 @@ import 'package:sizer/sizer.dart';
 import 'package:unity_levelplay_mediation/unity_levelplay_mediation.dart';
 import 'NotificationService.dart';
 import 'ad/IronSource/IronSourceService.dart';
+import 'ad/IronSource/banner_ad/BannerAdController.dart';
 import 'ad/IronSource/ini_ad/IsIntAdController.dart';
 import 'ad/IronSource/reward_ad/IsRewardAdController.dart';
 import 'ad/admob/AppOpenAdManager.dart';
@@ -91,14 +92,9 @@ class MyApp extends StatelessWidget {
             Get.put(UserController());
             Get.put(AuthController());
             Get.put(MiningController());
-            Get.put(RewardAdController());
             Get.put(RewardController());
 
             Get.put(IronSourceService());
-            Get.put(IsRewardAdController(onReward: (LevelPlayReward reward) {  }));
-            Get.put(IsIntAdController());
-            // Get.put(NativeAdController());
-            // Get.put(BannerAdController());
           },
         );
       },

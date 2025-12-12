@@ -13,9 +13,9 @@ import 'package:shimmer/shimmer.dart';
 import 'package:sizer/sizer.dart';
 
 import '../../ad/admob/NativeAdExample.dart';
-import '../../ad/admob/RewardAdController.dart';
 import '../../const/app_images.dart';
 import '../../service/PreferenceHelper.dart';
+import '../../utils/utils.dart';
 import '../widget/AppSnackBar.dart';
 
 class SpinningWheelPage extends StatefulWidget {
@@ -175,8 +175,10 @@ class SpinningWheelPageState extends State<SpinningWheelPage> {
                     setState(() {
                       spinBtnName = 'Opening Ad';
                     });
+
                     await Future.delayed(Duration(microseconds: 2));
-                    final rewardController = Get.find<RewardAdController>();
+
+                  /*  final rewardController = Get.find<RewardAdController>();
 
                     bool? result = await rewardController.showRewardAd();
                     setState(() {
@@ -186,14 +188,38 @@ class SpinningWheelPageState extends State<SpinningWheelPage> {
                     if (result == true) {
                       int rdm = Random().nextInt(6);
                       await mySpinController.spinNow(luckyIndex: rdm+1,totalSpin: 10,baseSpinDuration: 20);
-                    } else {
+                    }
+                    else {
                       AppSnackBar.show(
                           title: 'Ad Failed',
                           subtitle: 'Try after some time',
                         backgroundColor: Colors.red.withValues(alpha: 0.5)
 
                       );
-                    }
+                    }*/
+
+                    ShowRewardAd().show(
+                        onReward: () async {
+                          setState(() {
+                            spinBtnName = 'Spin the wheel';
+                          });
+
+                          // Spin the wheel logic
+                          int rdm = Random().nextInt(6);
+                          await mySpinController.spinNow(luckyIndex: rdm+1, totalSpin: 10, baseSpinDuration: 20);
+                        },
+                        onFailed: () {
+                          setState(() {
+                            spinBtnName = 'Spin the wheel';
+                          });
+
+                          AppSnackBar.show(
+                              title: 'Ad Failed',
+                              subtitle: 'Try after some time',
+                              backgroundColor: Colors.red.withValues(alpha: 0.5)
+                          );
+                        }
+                    );
 
 
                   },

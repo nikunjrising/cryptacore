@@ -6,6 +6,8 @@ import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 
 import '../../ad/admob/RewardAdController.dart';
+import '../../utils/utils.dart';
+import '../widget/AppSnackBar.dart';
 import '../widget/DiagonalBorderPainter.dart';
 
 
@@ -64,19 +66,33 @@ class _MiningBoosterDialogState extends State<MiningBoosterDialog> {
                             onTap: () async {
                               Get.back();  // close dialog first
 
-                              final rewardController = Get.find<RewardAdController>();
-
-                              bool? result = await rewardController.showRewardAd();
-
-                              if (result == null) {
-                                Get.snackbar("Oops!", "Ad not available, please try again later.");
-                                return;
-                              }
-
-                              if (result == true) {
-                                widget.onTapButton();
-                                Get.snackbar("Success!", "Boost Activated!");
-                              }
+                              ShowRewardAd().show(
+                                  onReward: () async {
+                                    // Spin the wheel logic
+                                    widget.onTapButton();
+                                    Get.snackbar("Success!", "Boost Activated!");
+                                  },
+                                  onFailed: () {
+                                    AppSnackBar.show(
+                                        title: 'Ad Failed',
+                                        subtitle: 'Try after some time',
+                                        backgroundColor: Colors.red.withValues(alpha: 0.5)
+                                    );
+                                  }
+                              );
+                              //
+                              // final rewardController = Get.find<RewardAdController>();
+                              //
+                              // bool? result = await rewardController.showRewardAd();
+                              //
+                              // if (result == null) {
+                              //   Get.snackbar("Oops!", "Ad not available, please try again later.");
+                              //   return;
+                              // }
+                              //
+                              // if (result == true) {
+                              //
+                              // }
                             },
                             child: Container(
                               width: 240,

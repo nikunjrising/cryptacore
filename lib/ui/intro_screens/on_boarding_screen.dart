@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:sizer/sizer.dart';
+import '../../ad/admob/BannerAdWidget.dart';
 import '../../const/color.dart';
 import '../../model/OnBModel.dart';
 import '../../service/PreferenceHelper.dart';
@@ -75,7 +76,7 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: [
-                          const SizedBox(height: 75),
+                          const SizedBox(height: 30),
 
                           /// --- Logo Section ---
                           SvgPicture.asset(
@@ -174,6 +175,8 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
               right: 24,
               child: Column(
                 children: [
+                  BannerAdWidget(),
+                  const SizedBox(height: 15),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: List.generate(
@@ -192,7 +195,7 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
                       ),
                     ),
                   ),
-                  const SizedBox(height: 40),
+                  const SizedBox(height: 30),
                   GestureDetector(
                     onTap: _nextPage,
                     child: Container(
