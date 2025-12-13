@@ -85,6 +85,13 @@ class ConfigModel {
   bool isShowAd;
   bool isShowAppOpenAd;
 
+  String isAndroidAppKey;
+  String isIosAppKey;
+  String isINTAndroidAdUnitId;
+  String isINTIosAdUnitId;
+  String isREWARDAndroidAdUnitId;
+  String isREWARDIosAdUnitId;
+
   ConfigModel({
     required this.miningSpeed,
     required this.baseMiningPerHour,
@@ -115,6 +122,12 @@ class ConfigModel {
     required this.appOpenIosId,
     required this.isShowAd,
     required this.isShowAppOpenAd,
+    required this.isAndroidAppKey,
+    required this.isIosAppKey,
+    required this.isINTAndroidAdUnitId,
+    required this.isINTIosAdUnitId,
+    required this.isREWARDAndroidAdUnitId,
+    required this.isREWARDIosAdUnitId,
   });
 
   // -------- DEFAULT CONFIG --------
@@ -158,6 +171,14 @@ class ConfigModel {
       appStoreLink: '',
       isShowAd: true,
       isShowAppOpenAd: true,
+
+
+      isAndroidAppKey:"85460dcd",
+      isIosAppKey:"8545d445",
+      isINTAndroidAdUnitId:"aeyqi3vqlv6o8sh9",
+      isINTIosAdUnitId:"wmgt0712uuux8ju4",
+      isREWARDAndroidAdUnitId:"76yy3nay3ceui2a3",
+      isREWARDIosAdUnitId:"qwouvdrkuwivay5q",
     );
   }
 
@@ -200,6 +221,14 @@ class ConfigModel {
       appStoreLink: map['appStoreLink'] ?? '',
       isShowAd: map['isShowAd'] ?? true,
       isShowAppOpenAd: map['isShowAppOpenAd'] ?? true,
+
+
+      isAndroidAppKey: map['isAndroidAppKey'] ?? "85460dcd",
+      isIosAppKey: map['isIosAppKey'] ?? "8545d445",
+      isINTAndroidAdUnitId: map['isINTAndroidAdUnitId'] ?? "aeyqi3vqlv6o8sh9",
+      isINTIosAdUnitId: map['isINTIosAdUnitId'] ?? "wmgt0712uuux8ju4",
+      isREWARDAndroidAdUnitId: map['isREWARDAndroidAdUnitId'] ?? "76yy3nay3ceui2a3",
+      isREWARDIosAdUnitId: map['isREWARDIosAdUnitId'] ?? "qwouvdrkuwivay5q",
     );
   }
 
@@ -241,6 +270,13 @@ class ConfigModel {
       'appStoreLink': appStoreLink,
       'isShowAd': isShowAd,
       'isShowAppOpenAd': isShowAppOpenAd,
+
+      'isAndroidAppKey': isAndroidAppKey,
+      'isIosAppKey': isIosAppKey,
+      'isINTAndroidAdUnitId': isINTAndroidAdUnitId,
+      'isINTIosAdUnitId': isINTIosAdUnitId,
+      'isREWARDAndroidAdUnitId': isREWARDAndroidAdUnitId,
+      'isREWARDIosAdUnitId': isREWARDIosAdUnitId,
     };
   }
 }
