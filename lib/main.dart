@@ -8,14 +8,9 @@ import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:sizer/sizer.dart';
-import 'package:unity_levelplay_mediation/unity_levelplay_mediation.dart';
 import 'NotificationService.dart';
 import 'ad/IronSource/IronSourceService.dart';
-import 'ad/IronSource/banner_ad/BannerAdController.dart';
-import 'ad/IronSource/ini_ad/IsIntAdController.dart';
-import 'ad/IronSource/reward_ad/IsRewardAdController.dart';
 import 'ad/admob/AppOpenAdManager.dart';
-import 'ad/admob/RewardAdController.dart';
 import 'controller/AuthController.dart';
 import 'controller/ConfigController.dart';
 import 'controller/MiningController.dart';
@@ -40,11 +35,6 @@ void main() async {
   // await NotificationService.getToken();
   // Get.put(ConnectivityController());
   Get.put(ConfigController());
-
-  // Future.delayed(const Duration(seconds: 2), () {
-  //   appOpenAdManager.loadAd();
-  // });
-
 
   MobileAds.instance.updateRequestConfiguration(
     RequestConfiguration(testDeviceIds: ['16DABDC131ED249DF7B938D113C6D3B3']),

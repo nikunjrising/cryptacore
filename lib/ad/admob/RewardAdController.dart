@@ -11,7 +11,7 @@ import '../../controller/ConfigController.dart';
 
 class RewardAdController extends GetxController {
   RewardedAd? _rewardedAd;
-  bool _isLoading = false;
+  RxBool isAdLoaded = false.obs;
 
   @override
   void onInit() {
@@ -30,9 +30,9 @@ class RewardAdController extends GetxController {
 
   /// Load a rewarded ad if not already loaded
   Future<void> _loadRewardAd() async {
-    if (_isLoading || _rewardedAd != null) return;
+    if (isAdLoaded.value || _rewardedAd != null) return;
 
-    _isLoading = true;
+    isAdLoaded.value = false;
     final adUnitId = Platform.isAndroid
                       ? configController.config.value.rewardAndroidId
                       : configController.config.value.rewardIosId;
@@ -44,13 +44,13 @@ class RewardAdController extends GetxController {
         rewardedAdLoadCallback: RewardedAdLoadCallback(
         onAdLoaded: (ad) {
           _rewardedAd = ad;
-          _isLoading = false;
+          isAdLoaded.value = true;
           debugPrint('[RewardAd] loaded');
         },
         onAdFailedToLoad: (err) {
           debugPrint('[RewardAd] failed to load: $err');
           _rewardedAd = null;
-          _isLoading = false;
+          isAdLoaded.value = false;
           // try reload after short delay
           Future.delayed(const Duration(seconds: 5), _loadRewardAd);
         },

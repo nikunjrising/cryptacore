@@ -208,16 +208,13 @@ class SpinningWheelPageState extends State<SpinningWheelPage> {
                           int rdm = Random().nextInt(6);
                           await mySpinController.spinNow(luckyIndex: rdm+1, totalSpin: 10, baseSpinDuration: 20);
                         },
-                        onFailed: () {
+                        onFailed: () async {
                           setState(() {
                             spinBtnName = 'Spin the wheel';
                           });
 
-                          AppSnackBar.show(
-                              title: 'Ad Failed',
-                              subtitle: 'Try after some time',
-                              backgroundColor: Colors.red.withValues(alpha: 0.5)
-                          );
+                          int rdm = Random().nextInt(6);
+                          await mySpinController.spinNow(luckyIndex: rdm+1, totalSpin: 10, baseSpinDuration: 20);
                         }
                     );
 

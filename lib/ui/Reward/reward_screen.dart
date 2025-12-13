@@ -59,7 +59,8 @@ class _RewardScreenState extends State<RewardScreen> {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Text('Scratch and Win',style: TextStyle(color: AppColor.skyColor,fontSize: 24),),
-              Expanded(child: Center(child: rewardView())),
+              Expanded(
+                  child: rewardView()),
             ],
           ),
         ),
@@ -73,8 +74,8 @@ class _RewardScreenState extends State<RewardScreen> {
       padding: const EdgeInsets.symmetric(vertical: 25),
       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: 2,
-        mainAxisSpacing: 20,
-        crossAxisSpacing: 20,
+        mainAxisSpacing: 25,
+        crossAxisSpacing: 25,
       ),
       itemCount: 10,
       itemBuilder: (context, index) {
@@ -123,6 +124,7 @@ class _RewardScreenState extends State<RewardScreen> {
               );
             },
             child: Stack(
+              fit: StackFit.expand,
               children: [
                 Image.asset(bgImage, fit: BoxFit.cover),
                 if (claimed)

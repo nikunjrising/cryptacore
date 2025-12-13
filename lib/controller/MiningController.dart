@@ -251,7 +251,6 @@ class MiningController extends GetxController {
       earnedByReward.value = 0.0;
       return;
     }
-
     earnedByReward.value = (doc.data()?["earnedByReward"] ?? 0.0).toDouble();
   }
 

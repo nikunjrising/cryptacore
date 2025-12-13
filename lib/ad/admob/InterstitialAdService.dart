@@ -8,7 +8,7 @@ import '../../controller/ConfigController.dart';
 // 1. Extend GetxService (or GetxController)
 class InterstitialAdService extends GetxService {
   InterstitialAd? _interstitialAd;
-  bool isAdReady = false;
+  RxBool isAdReady = false.obs;
   final configController = Get.find<ConfigController>();
 
   // 2. Add onInit to Auto-Load the ad when this service is started
@@ -38,13 +38,13 @@ class InterstitialAdService extends GetxService {
         onAdLoaded: (ad) {
           print('✅ Interstitial ad loaded.');
           _interstitialAd = ad;
-          isAdReady = true;
+          isAdReady.value = true;
           _setCallbacks(ad);
         },
         onAdFailedToLoad: (error) {
           print('❌ Failed to load interstitial ad: ${error.message}');
           _interstitialAd = null;
-          isAdReady = false;
+          isAdReady.value = false;
 
           // Optional: Retry loading after a delay if it fails
           Future.delayed(const Duration(seconds: 10), () => loadAd());
@@ -61,13 +61,13 @@ class InterstitialAdService extends GetxService {
       onAdDismissedFullScreenContent: (ad) {
         print('Interstitial ad dismissed.');
         try { ad.dispose(); } catch (_) {}
-        isAdReady = false; // Mark as not ready immediately
+        isAdReady.value = false; // Mark as not ready immediately
         loadAd(); // Load next ad immediately for the next click
       },
       onAdFailedToShowFullScreenContent: (ad, error) {
         print('Interstitial failed to show: $error');
         try { ad.dispose(); } catch (_) {}
-        isAdReady = false;
+        isAdReady.value = false;
         loadAd(); // Reload
       },
     );
@@ -80,7 +80,7 @@ class InterstitialAdService extends GetxService {
     required VoidCallback onClose,
     required VoidCallback onUnavailable,
   }) {
-    if (isAdReady && _interstitialAd != null) {
+    if (isAdReady.value && _interstitialAd != null) {
       _interstitialAd!.show();
 
       // We don't nullify _interstitialAd here immediately,
@@ -101,13 +101,13 @@ class InterstitialAdService extends GetxService {
       _interstitialAd!.fullScreenContentCallback = FullScreenContentCallback(
           onAdDismissedFullScreenContent: (ad) {
             ad.dispose();
-            isAdReady = false;
+            isAdReady.value = false;
             onClose(); // <--- Call your action here
             loadAd(); // Load next
           },
           onAdFailedToShowFullScreenContent: (ad, err) {
             ad.dispose();
-            isAdReady = false;
+            isAdReady.value = false;
             onUnavailable(); // <--- Call fallback here
             loadAd();
           }

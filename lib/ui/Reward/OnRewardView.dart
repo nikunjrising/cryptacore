@@ -209,7 +209,21 @@ class _OnRewardViewState extends State<OnRewardView> {
         ]),
           SizedBox(height: 30),
           Bounce(
-            onTap: _showRevealAdDialog, // 👈 IMPORTANT CHANGE
+            // onTap: _showRevealAdDialog, // 👈 IMPORTANT CHANGE
+            onTap: () {
+              ShowRewardAd().show(
+                  onReward: () async {
+                    setState(() => revealed = true);
+                  },
+                  onFailed: () {
+                    AppSnackBar.show(
+                        title: 'Ad Failed',
+                        subtitle: 'Try after some time',
+                        backgroundColor: Colors.red.withValues(alpha: 0.5)
+                    );
+                  }
+              );
+            }, // 👈 IMPORTANT CHANGE
             child: Container(
               padding: EdgeInsets.symmetric(horizontal: 30, vertical: 12),
               decoration: BoxDecoration(

@@ -13,37 +13,44 @@ class IsRewardAdController extends GetxController
   bool get isAdReady => _isAdReady.value;
   bool get isLoading => _isLoading.value;
 
-  late LevelPlayRewardedAd _rewardedAd;
+  // CHANGED: Make nullable to prevent LateInitializationError
+  LevelPlayRewardedAd? _rewardedAd;
+
   late void Function(LevelPlayReward reward) onReward;
 
-  // Use Get.find to get the service
   final IronSourceService _adService = Get.find<IronSourceService>();
 
-  // Constructor
   IsRewardAdController({required this.onReward});
 
   @override
   void onInit() {
     super.onInit();
-    // Wait for SDK initialization
-    ever(_adService.isInitialized, (isInitialized) {
-      if (isInitialized) {
-        _initializeAd();
-      }
-    });
+
+    // CHANGED: Check if ALREADY initialized, otherwise wait for it
+    if (_adService.isInitialized.value) {
+      _initializeAd();
+    } else {
+      ever(_adService.isInitialized, (isInitialized) {
+        if (isInitialized && _rewardedAd == null) {
+          _initializeAd();
+        }
+      });
+    }
   }
 
   void _initializeAd() {
     print('Initializing rewarded ad...');
     _rewardedAd = LevelPlayRewardedAd(adUnitId: _getRewardedAdUnitId());
-    _rewardedAd.setListener(this);
-    loadAd(); // Load the ad after SDK is initialized
+    _rewardedAd!.setListener(this); // Use ! because we just assigned it
+
+    // Load immediately after init
+    loadAd();
   }
 
   String _getRewardedAdUnitId() {
     return Platform.isAndroid
-        ? '76yy3nay3ceui2a3'  // Android Ad Unit ID
-        : 'qwouvdrkuwivay5q'; // iOS Ad Unit ID
+        ? '76yy3nay3ceui2a3'
+        : 'qwouvdrkuwivay5q';
   }
 
   // Method to load the rewarded ad
@@ -53,27 +60,36 @@ class IsRewardAdController extends GetxController
       return;
     }
 
-    if (_isLoading.value) return; // Prevent multiple loads
+    // CHANGED: Safety check if _rewardedAd is null
+    if (_rewardedAd == null) {
+      print('⚠️ _rewardedAd is null, initializing now...');
+      _initializeAd();
+      return;
+    }
+
+    if (_isLoading.value) return;
 
     _isLoading.value = true;
-    _rewardedAd.loadAd();
+    _rewardedAd!.loadAd(); // Use !
   }
 
   // Method to show the rewarded ad
   Future<bool?> showRewardAd() async {
-    if (!_adService.isInitialized.value) {
-      print('Cannot show ad: SDK not initialized');
+    if (!_adService.isInitialized.value || _rewardedAd == null) {
+      print('Cannot show ad: SDK/AdObject not ready');
       Get.snackbar('Error', 'Ad system not ready yet');
+      // Try to fix it for next time
+      loadAd();
       return false;
     }
 
-    if (await _rewardedAd.isAdReady()) {
-      _rewardedAd.showAd(placementName: 'Default');
+    if (await _rewardedAd!.isAdReady()) {
+      _rewardedAd!.showAd(placementName: 'Default');
       return true;
     } else {
       print('Ad not ready, loading...');
       loadAd();
-      Get.snackbar('Ad Loading', 'Please wait while we load the ad');
+      // We don't show snackbar here because Utils handles the waiting dialog
       return false;
     }
   }
@@ -83,9 +99,9 @@ class IsRewardAdController extends GetxController
   @override
   void onAdRewarded(LevelPlayReward reward, LevelPlayAdInfo adInfo) {
     print('User rewarded with: $reward');
-    onReward(reward); // Call the dynamic reward handler
-    _isAdReady.value = false; // Reset ad state
-    loadAd(); // Load next ad
+    onReward(reward);
+    _isAdReady.value = false;
+    loadAd();
   }
 
   @override
@@ -94,7 +110,6 @@ class IsRewardAdController extends GetxController
     _isLoading.value = false;
     _isAdReady.value = false;
 
-    // Retry after 2 seconds if failed
     Future.delayed(Duration(seconds: 2), () => loadAd());
   }
 
@@ -109,7 +124,7 @@ class IsRewardAdController extends GetxController
   void onAdClosed(LevelPlayAdInfo adInfo) {
     print('Ad Closed: $adInfo');
     _isAdReady.value = false;
-    loadAd(); // Load next ad when closed
+    loadAd();
   }
 
   @override
@@ -121,7 +136,7 @@ class IsRewardAdController extends GetxController
   void onAdDisplayFailed(LevelPlayAdError error, LevelPlayAdInfo adInfo) {
     print('Ad Display Failed: $error');
     _isAdReady.value = false;
-    loadAd(); // Try loading again
+    loadAd();
   }
 
   @override

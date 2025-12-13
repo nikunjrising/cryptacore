@@ -11,6 +11,9 @@ class AppOpenAdManager {
   bool _isLoading = false;
   DateTime? _lastBackgroundTime;
 
+  // 1. Expose this getter so Dashboard can check it
+  bool get isShowingAd => _isShowingAd;
+
   final appConfig = Get.find<ConfigController>();
 
   /// Wait for config to load completely
@@ -112,6 +115,12 @@ class AppOpenAdManager {
   }
 
   void recordAppPaused() {
+    // 2. Fix: If pause is caused by OUR Ad, don't record time
+    if (_isShowingAd) {
+      debugPrint("⏸️ App paused due to Ad Showing - IGNORING time record");
+      return;
+    }
+
     debugPrint("⏸️ App paused - recording time");
     _lastBackgroundTime = DateTime.now();
   }
@@ -150,6 +159,11 @@ class AppOpenAdManager {
     debugPrint("✅✅✅ SHOWING AppOpenAd...");
     _isShowingAd = true;
 
+    // 3. Fix: Reset the timer NOW.
+    // This ensures that when this ad closes and app resumes,
+    // 'shouldShowAd' will calculate 0 minutes difference and return FALSE.
+    _lastBackgroundTime = DateTime.now();
+
     try {
       _appOpenAd!.show();
     } catch (e) {
@@ -173,5 +187,3 @@ class AppOpenAdManager {
 """);
   }
 }
-
-final AppOpenAdManager appOpenAdManager = AppOpenAdManager();

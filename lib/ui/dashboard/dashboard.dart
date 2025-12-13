@@ -80,6 +80,13 @@ class _DashboardState extends State<Dashboard> with WidgetsBindingObserver{
   void didChangeAppLifecycleState(AppLifecycleState state) {
     debugPrint("📱 Lifecycle state: $state");
 
+    // FIX: If the App Open Ad is currently showing,
+    // ignore these system events (because the Ad overlay causes them)
+    if (appOpenAdManager.isShowingAd) {
+      debugPrint("✋ Lifecycle Ignored: Ad is showing");
+      return;
+    }
+
     if (state == AppLifecycleState.paused) {
       appOpenAdManager.recordAppPaused();
     } else if (state == AppLifecycleState.resumed) {
@@ -90,6 +97,7 @@ class _DashboardState extends State<Dashboard> with WidgetsBindingObserver{
       });
     }
   }
+
 
 
 
